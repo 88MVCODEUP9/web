@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terminal de Comandos · Windows</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0e14;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #e6edf3;
+            padding: 2rem 1.5rem;
+        }
+
+        .page-header {
+            max-width: 1400px;
+            margin: 0 auto 2.5rem auto;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #58a6ff, #a371f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #8b949e;
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.8rem;
+        }
+
+        /* ---------- Terminal Card (Uiverse style) ---------- */
+        .terminal-card {
+            background: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+
+        .terminal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .terminal_toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 38px;
+            padding: 0 16px;
+            background: #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .butt {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn {
+            height: 13px;
+            width: 13px;
+            border-radius: 50%;
+            border: none;
+            cursor: default;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.15);
+        }
+
+        .btn-color:nth-child(1) {
+            background: #ff5f56;
+        }
+        .btn-color:nth-child(2) {
+            background: #ffbd2e;
+        }
+        .btn-color:nth-child(3) {
+            background: #27c93f;
+        }
+
+        .user {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            opacity: 0.8;
+        }
+
+        .add_tab {
+            border: none;
+            color: #ffffff;
+            background: #3a3a3a;
+            padding: 3px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .terminal_body {
+            padding: 18px 18px 20px 18px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: #1e1e1e;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .terminal_body .card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #58a6ff;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 6px;
+            margin-bottom: 2px;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .command-entry {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .command-entry .desc {
+            color: #8b949e;
+            font-size: 0.78rem;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 0.2px;
+            padding-left: 2px;
+        }
+
+        .command-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 6px 12px 6px 14px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .command-line .prompt {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .prompt .terminal_user {
+            color: #00ff9c;
+        }
+        .prompt .terminal_location {
+            color: #0066ff;
+        }
+        .prompt .terminal_bling {
+            color: #ff00ff;
+        }
+
+        .command-line code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #7ee787;
+            font-size: 0.85rem;
+            word-break: break-all;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cmd-text {
+            color: #7ee787;
+        }
+
+        .copy-btn {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 5px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            height: 28px;
+        }
+
+        .copy-btn:hover {
+            background: #30363d;
+            border-color: #8b949e;
+        }
+
+        .copy-btn.copied {
+            background: #238636;
+            border-color: #238636;
+            color: #fff;
+        }
+
+        .warning-note {
+            font-size: 0.7rem;
+            color: #f0883e;
+            background: #2d1b0e;
+            border-left: 3px solid #f0883e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 2px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* scroll personalizado */
+        .terminal_body::-webkit-scrollbar {
+            width: 5px;
+        }
+        .terminal_body::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        .terminal_body::-webkit-scrollbar-thumb {
+            background: #3a3a3a;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem 0.8rem;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .command-line {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .copy-btn {
+                width: 100%;
+                margin-top: 4px;
+            }
+            .command-line .prompt {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1>⚡ Terminal de Comandos · Windows</h1>
+        <p>Diagnóstico, reparo e manutenção — todos os comandos essenciais para estabilidade e performance.</p>
+    </div>
+
+    <div class="cards-grid">
+
+        <!-- ==================== CARD 1: Antivírus Defender ==================== -->
+        <div class="terminal-card">
+            <div class="terminal_toolbar">
+                <div class="butt">
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                </div>
+                <p class="user">admin@defender</p>
+                <button class="add_tab">+</button>
+            </div>
+            <div class="terminal_body">
+                <div class="card-title">🛡️ Antivírus (Defender)</div>
+
+                <div class="command-entry">
+                    <span class="desc">Atualizar assinaturas de vírus</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Update-MpSignature</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Update-MpSignature')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Verificação rápida do sistema</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Start-MpScan -ScanType QuickScan</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Start-MpScan -ScanType QuickScan')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Verificação completa</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Start-MpScan -ScanType FullScan</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Start-MpScan -ScanType FullScan')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Escanear pasta de Downloads</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Start-MpScan -ScanPath "C:\Users\Seu\Downloads"</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Start-MpScan -ScanPath \"C:\\Users\\Seu\\Downloads\"')">Copiar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CARD 2: Status e Monitoramento ==================== -->
+        <div class="terminal-card">
+            <div class="terminal_toolbar">
+                <div class="butt">
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                </div>
+                <p class="user">admin@status</p>
+                <button class="add_tab">+</button>
+            </div>
+            <div class="terminal_body">
+                <div class="card-title">📊 Status &amp; Monitoramento</div>
+
+                <div class="command-entry">
+                    <span class="desc">Status geral do Defender</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-MpComputerStatus</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-MpComputerStatus')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Listar ameaças encontradas</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-MpThreat</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-MpThreat')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Histórico de detecções</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-MpThreatDetection</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-MpThreatDetection')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Últimos 50 erros do sistema</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-WinEvent -LogName System -MaxEvents 50 | Where-Object { $_.LevelDisplayName -eq "Erro" } | Format-List TimeCreated, Message</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-WinEvent -LogName System -MaxEvents 50 | Where-Object { $_.LevelDisplayName -eq \"Erro\" } | Format-List TimeCreated, Message')">Copiar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CARD 3: Reparação do Windows ==================== -->
+        <div class="terminal-card">
+            <div class="terminal_toolbar">
+                <div class="butt">
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                </div>
+                <p class="user">admin@reparo</p>
+                <button class="add_tab">+</button>
+            </div>
+            <div class="terminal_body">
+                <div class="card-title">🔧 Reparação do Windows</div>
+
+                <div class="command-entry">
+                    <span class="desc">Verificar e reparar arquivos do sistema</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>sfc /scannow</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'sfc /scannow')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Reparar a imagem do Windows (DISM)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>DISM /Online /Cleanup-Image /RestoreHealth</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'DISM /Online /Cleanup-Image /RestoreHealth')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">DISM com fonte oficial (reparo avançado)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>DISM /Online /Cleanup-Image /RestoreHealth /Source:https://www.microsoft.com/software-download/windows11 /LimitAccess</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'DISM /Online /Cleanup-Image /RestoreHealth /Source:https://www.microsoft.com/software-download/windows11 /LimitAccess')">Copiar</button>
+                    </div>
+                    <div class="warning-note">⚠️ Troque <strong>windows11</strong> por <strong>windows10</strong> se for o caso.</div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Reiniciar o PC imediatamente</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>shutdown /r /t 0</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'shutdown /r /t 0')">Copiar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CARD 4: Diagnóstico de Disco ==================== -->
+        <div class="terminal-card">
+            <div class="terminal_toolbar">
+                <div class="butt">
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                </div>
+                <p class="user">admin@disco</p>
+                <button class="add_tab">+</button>
+            </div>
+            <div class="terminal_body">
+                <div class="card-title">💾 Diagnóstico de Disco (SSD/HDD)</div>
+
+                <div class="command-entry">
+                    <span class="desc">Ver saúde dos discos físicos</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-PhysicalDisk | Select FriendlyName,HealthStatus,Size</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-PhysicalDisk | Select FriendlyName,HealthStatus,Size')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Verificar sistema de arquivos (C:)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>chkdsk C: /scan</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'chkdsk C: /scan')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Corrigir erros lógicos (C:)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>chkdsk C: /f</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'chkdsk C: /f')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Verificar e reparar setores defeituosos (C:)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>chkdsk C: /r</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'chkdsk C: /r')">Copiar</button>
+                    </div>
+                    <div class="warning-note">⏳ Requer reinicialização. Execute e digite <strong>Y</strong> para agendar.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CARD 5: Diagnóstico Avançado ==================== -->
+        <div class="terminal-card">
+            <div class="terminal_toolbar">
+                <div class="butt">
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                </div>
+                <p class="user">admin@avancado</p>
+                <button class="add_tab">+</button>
+            </div>
+            <div class="terminal_body">
+                <div class="card-title">🔬 Diagnóstico Avançado</div>
+
+                <div class="command-entry">
+                    <span class="desc">Teste de memória RAM (diagnóstico)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>mdsched</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'mdsched')">Copiar</button>
+                    </div>
+                    <div class="warning-note">🔄 Reinicia o PC e executa o teste — aguarde a conclusão.</div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Limpeza profunda de arquivos temporários</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>cleanmgr /sageset:1 &amp;&amp; cleanmgr /sagerun:1</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'cleanmgr /sageset:1 && cleanmgr /sagerun:1')">Copiar</button>
+                    </div>
+                    <div class="warning-note">📋 O primeiro comando abre a configuração; marque todas as opções e OK.</div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Desfragmentar unidade (apenas HDD)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>defrag C: /O</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'defrag C: /O')">Copiar</button>
+                    </div>
+                    <div class="warning-note">❌ <strong>NÃO use em SSD</strong> — o Windows já otimiza automaticamente (TRIM).</div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Listar drivers de terceiros instalados</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-WindowsDriver -Online | Where-Object { $_.ProviderName -notlike "Microsoft*" } | Select-Object Driver, Version, Date</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-WindowsDriver -Online | Where-Object { $_.ProviderName -notlike \"Microsoft*\" } | Select-Object Driver, Version, Date')">Copiar</button>
+                    </div>
+                    <div class="warning-note">🔧 Drivers antigos podem causar instabilidade — atualize pelo fabricante.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CARD 6: Manutenção e Otimização ==================== -->
+        <div class="terminal-card">
+            <div class="terminal_toolbar">
+                <div class="butt">
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                    <button class="btn btn-color"></button>
+                </div>
+                <p class="user">admin@manutencao</p>
+                <button class="add_tab">+</button>
+            </div>
+            <div class="terminal_body">
+                <div class="card-title">⚙️ Manutenção &amp; Otimização</div>
+
+                <div class="command-entry">
+                    <span class="desc">Instalar e aplicar todas as atualizações do Windows</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Install-Module PSWindowsUpdate -Force; Get-WindowsUpdate -Install -AcceptAll -AutoReboot</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Install-Module PSWindowsUpdate -Force; Get-WindowsUpdate -Install -AcceptAll -AutoReboot')">Copiar</button>
+                    </div>
+                    <div class="warning-note">⬇️ Instala o módulo (se necessário) e baixa/instala todas as atualizações.</div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Reiniciar serviços essenciais do Windows</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Restart-Service -Name wuauserv, bits, cryptSvc, trustedInstaller</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Restart-Service -Name wuauserv, bits, cryptSvc, trustedInstaller')">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Verificar temperatura dos componentes</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>Get-WmiObject -Namespace "root\wmi" -Class MSAcpi_ThermalZoneTemperature | Select-Object CurrentTemperature</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'Get-WmiObject -Namespace \"root\\wmi\" -Class MSAcpi_ThermalZoneTemperature | Select-Object CurrentTemperature')">Copiar</button>
+                    </div>
+                    <div class="warning-note">🌡️ Divida o valor por 10 para obter °C. Acima de 80°C, limpe os coolers.</div>
+                </div>
+
+                <div class="command-entry">
+                    <span class="desc">Executar SFC após DISM (recomendado)</span>
+                    <div class="command-line">
+                        <div class="prompt">
+                            <span class="terminal_user">admin</span><span class="terminal_location">~</span><span class="terminal_bling">$</span>
+                            <code>sfc /scannow</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyCmd(this, 'sfc /scannow')">Copiar</button>
+                    </div>
+                    <div class="warning-note">🔁 Execute sempre após um DISM para garantir a correção total.</div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- fim cards-grid -->
+
+    <script>
+        function copyCmd(btn, textToCopy) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = '✓ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Falha ao copiar: ', err);
+                btn.innerText = 'Erro';
+            });
+        }
+    </script>
+
+</body>
+</html>
