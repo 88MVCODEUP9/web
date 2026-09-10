@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+   <link rel="icon" type="image/png" href="icone.webp">
+<title>MV Música</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="brand">MV <span>Música</span></div>
+    <h1>Baixe sua mídia por URL</h1>
+    <p>MP3, M4A ou MP4. Use apenas em conteúdo que você possui ou tem autorização para baixar.</p>
+  </section>
+
+  <section class="card">
+    <label>URL da mídia</label>
+    <div class="urlRow"><input id="url" placeholder="https://..."/><button id="analisar">Analisar</button></div>
+    <div id="media" class="media hidden">
+      <img id="thumb" alt="thumbnail"/>
+      <div><h2 id="title"></h2><p id="meta"></p></div>
+    </div>
+
+    <div class="controls">
+      <div><label>Formato</label><select id="format"><option value="mp3">MP3</option><option value="m4a">M4A</option><option value="mp4">MP4</option></select></div>
+      <div><label>Qualidade MP3</label><select id="quality"><option value="128">128 kbps</option><option value="192" selected>192 kbps</option><option value="256">256 kbps</option><option value="320">320 kbps</option></select></div>
+    </div>
+
+    <button id="baixar" class="download">Baixar</button>
+    <div id="status" class="status"></div>
+  </section>
+
+  <section class="note"><strong>Requisitos locais:</strong> Node.js, yt-dlp e FFmpeg instalados no Windows.</section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
