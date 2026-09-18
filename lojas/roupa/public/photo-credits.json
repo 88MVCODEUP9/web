@@ -1,0 +1,26 @@
+[
+  {
+    "category": "camisa",
+    "author": "MOISES RIBEIRO",
+    "source": "https://www.pexels.com/photo/a-man-in-printed-button-up-polo-shirt-and-black-shorts-11030475/",
+    "image": "https://images.pexels.com/photos/11030475/pexels-photo-11030475.png?auto=compress&cs=tinysrgb&w=1000&fm=jpg",
+    "local": "/produtos/camisa-foto.jpg",
+    "license": "https://www.pexels.com/license/"
+  },
+  {
+    "category": "calca",
+    "author": "joao Guerreiro",
+    "source": "https://www.pexels.com/photo/model-posing-in-black-pants-15299024/",
+    "image": "https://images.pexels.com/photos/15299024/pexels-photo-15299024.jpeg?auto=compress&cs=tinysrgb&w=1000&fm=jpg",
+    "local": "/produtos/calca-foto.jpg",
+    "license": "https://www.pexels.com/license/"
+  },
+  {
+    "category": "bermuda",
+    "author": "Gursher Gill",
+    "source": "https://www.pexels.com/photo/man-in-black-polo-shirt-and-shorts-20775152/",
+    "image": "https://images.pexels.com/photos/20775152/pexels-photo-20775152.jpeg?auto=compress&cs=tinysrgb&w=1000&fm=jpg",
+    "local": "/produtos/bermuda-foto.jpg",
+    "license": "https://www.pexels.com/license/"
+  }
+]
